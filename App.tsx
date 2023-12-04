@@ -39,6 +39,8 @@ useEffect(() => {
   apiData();
 }, [page])
 
+console.log();
+
 const renderItem: ListRenderItem<Product> = ({ item }: ListRenderItemInfo<Product>)=>{
   return(
     <View style={{ margin: 10, padding: 10, backgroundColor: '#f0f0f0', borderRadius: 8 }}>
