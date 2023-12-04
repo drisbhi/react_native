@@ -8,6 +8,7 @@ import {
   ListRenderItem,
   ListRenderItemInfo,
 } from 'react-native';
+import useProductList from './component/useProductList';
 
 interface Product {
   id: number;
@@ -19,29 +20,7 @@ interface Product {
 }
 
 function App(): JSX.Element {
-  const [page, setPage] = useState(1);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const apiData = async () => {
-    try {
-      const res = await fetch(
-        `${'https://dummyjson.com/products'}?limit=05&page=${page}`,
-      );
-      const data = await res.json();
-      setProducts(prevProducts => [...prevProducts, ...data?.products]);
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    apiData();
-  }, [page]);
-
-  console.log();
+  const { products, loading, loadMore } = useProductList();
 
   const renderItem: ListRenderItem<Product> = ({
     item,
@@ -76,9 +55,6 @@ function App(): JSX.Element {
     );
   };
 
-  const handleEndReached = () => {
-    setPage(prevPage => prevPage + 1);
-  };
 
   return (
     <View style={{flex: 1, padding: 16}}>
@@ -89,7 +65,7 @@ function App(): JSX.Element {
           data={products}
           renderItem={renderItem}
           keyExtractor={item => item.id.toString() + Math.random()}
-          onEndReached={handleEndReached}
+          onEndReached={loadMore}
         />
       )}
     </View>
