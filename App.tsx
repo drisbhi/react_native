@@ -20,7 +20,7 @@ interface Product {
 }
 
 function App(): JSX.Element {
-  const { products, loading, loadMore } = useProductList();
+  const {products, loading, loadMore, isFetchingMore} = useProductList();
 
   const renderItem: ListRenderItem<Product> = ({
     item,
@@ -55,6 +55,13 @@ function App(): JSX.Element {
     );
   };
 
+  const renderFooter = () => {
+    return isFetchingMore ? (
+      <View style={{marginTop: 10}}>
+        <ActivityIndicator size="small" color="#0000ff" />
+      </View>
+    ) : null;
+  };
 
   return (
     <View style={{flex: 1, padding: 16}}>
@@ -66,6 +73,8 @@ function App(): JSX.Element {
           renderItem={renderItem}
           keyExtractor={item => item.id.toString() + Math.random()}
           onEndReached={loadMore}
+          onEndReachedThreshold={0.1}
+          ListFooterComponent={renderFooter}
         />
       )}
     </View>
